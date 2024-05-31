@@ -1,0 +1,94 @@
+﻿@model IEnumerable<WebApplication1.Models.Producto>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5 class="alert alert-primary text-center">
+                LISTA DE MEDICAMENTOS
+            </h5>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        <div class="col-2">
+            <div class="float-lg-end">
+                <a asp-controller="Home" asp-action="Create" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Agregar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- Contenedor para la notificación -->
+            <div id="notification-container"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    Administración de Medicamentos
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tablaProducto" class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(p => p.Id)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Descripcion)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Precio)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Cantidad)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Caducidad)</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var elemento in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(p => elemento.Id)</td>
+                                        <td>@Html.DisplayFor(p => elemento.Descripcion)</td>
+                                        <td>@Html.DisplayFor(p => elemento.Precio)</td>
+                                        <td>@Html.DisplayFor(p => elemento.Cantidad)</td>
+                                        <td>@Html.DisplayFor(p => elemento.Caducidad)</td>
+                                        <td>
+                                            <a asp-controller="Home" asp-action="Edit" asp-route-id="@elemento.Id" class="btn btn-primary">Editar</a>
+                                            <a asp-controller="Home" asp-action="Delete" asp-route-id="@elemento.Id" class="btn btn-danger">Eliminar</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="float-lg-end">
+    <a asp-controller="Home" asp-action="generarReporte" class="btn btn-success">
+        <i class="fa-solid fa-file-pdf"></i> PDF
+    </a>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Inicializar DataTables
+            $('#tablaProducto').DataTable();
+
+            // Mostrar la notificación si existe un mensaje en ViewBag
+            var mensajeBienvenida = '@ViewBag.MensajeBienvenida';
+            if (mensajeBienvenida) {
+                $.notify(mensajeBienvenida, "success");
+            }
+        });
+    </script>
+}
