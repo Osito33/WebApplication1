@@ -71,29 +71,7 @@ namespace WebApplication1.Controllers
             return View(producto);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RealizarVenta(int id, int CantidadVendida)
-        {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            if (CantidadVendida <= 0 || CantidadVendida > producto.Cantidad)
-            {
-                ModelState.AddModelError("", "Cantidad a vender no válida.");
-                return View("Ventas", producto);
-            }
-
-            producto.Cantidad -= CantidadVendida;
-            _context.Productos.Update(producto);
-            await _context.SaveChangesAsync();
-
-            TempData["ProductSold"] = "Venta realizada exitosamente.";
-            return RedirectToAction("Index");
-        }
-
+      
         [HttpPost]
         public async Task<IActionResult> AddPerson(Producto producto)
         {
@@ -101,7 +79,7 @@ namespace WebApplication1.Controllers
             {
                 _context.Productos.Add(producto);
                 await _context.SaveChangesAsync();
-                TempData["ProductAdded"] = "Producto agregado exitosamente.";
+                TempData["SuccessMessage"] = "Producto agregado exitosamente.";
                 return RedirectToAction("Index");
             }
             return View(producto);

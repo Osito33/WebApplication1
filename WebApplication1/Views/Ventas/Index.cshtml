@@ -1,5 +1,150 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model IEnumerable<WebApplication1.Models.Venta>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5 class="alert alert-primary text-center">
+                VENTAS REALIZADAS
+            </h5>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="float-lg-end">
+            <a asp-controller="Ventas" asp-action="Create" class="btn btn-success">
+                <i class="fa-solid fa-plus"></i> Agregar Producto
+            </a>
+        </div>
+    </div>
+
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table id="ventasTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>NoVenta</th>
+                                <th>NDC</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="ventasBody">
+                            @{
+                                var numeroVenta = Model.FirstOrDefault()?.NoVenta; // Obtener el primer número de venta para filtrar
+                                var productosVenta = Model.Where(p => p.NoVenta == numeroVenta);
+                            }
+                            @foreach (var venta in productosVenta)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(p => venta.NoVenta)</td>
+                                    <td>@Html.DisplayFor(p => venta.NDC)</td>
+                                    <td>@Html.DisplayFor(p => venta.Descripcion)</td>
+                                    <td>@Html.DisplayFor(p => venta.Cantidad)</td>
+                                    <td>@Html.DisplayFor(p => venta.Precio)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>No hay datos para mostrar.</p>
+    }
+    
+    <div class="row">
+        <div class="col-12">
+            <h4>Total de la Venta: $<span id="totalVenta"></span></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="float-lg-end">
+            <a asp-controller="Ventas" asp-action="realizarVenta" class="btn btn-success">
+                <i class="fa-solid fa-plus"></i> Realizar Venta
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="successMessageContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="successMessageToast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Mensaje de Éxito</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="successMessageText"></div>
+    </div>
+</div>
+
+<div id="errorMessageContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="errorMessageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Mensaje de Error</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="errorMessageText"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            calcularTotalVenta();
+
+            function calcularTotalVenta() {
+                var totalVenta = 0;
+                $('#ventasBody tr').each(function () {
+                    // Obtener el texto del td correspondiente al precio
+                    var precioStr = $(this).find('td:eq(6)').text().trim();
+                    // Convertir el texto a un número entero
+                    var precio = parseInt(precioStr);
+                    // Verificar si el valor es un número válido
+                    if (!isNaN(precio)) {
+                        totalVenta += precio;
+                    } else {
+                        console.log('Valor no válido:', precioStr);
+                    }
+                });
+                // Mostrar el total de la venta
+                $('#totalVenta').text(totalVenta.toFixed(2));
+            }
+        });
+
+
+
+        $(document).ready(function () {
+            var errorMessage = '@Html.Raw(TempData["ErrorMessage"])';
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
+            }
+        });
+
+        $(document).ready(function () {
+            var successMessage = '@Html.Raw(TempData["SuccessMessage"])';
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: successMessage
+                });
+            }
+        });
+    </script>
+
 }

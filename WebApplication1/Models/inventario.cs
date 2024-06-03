@@ -1,15 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {
-    public class Producto
+    public class Inventario
     {
         [Key]
         public int Id { get; set; }
-
-        [Required(ErrorMessage = "El NDC es Obligatorio")]
-        public required string NDC { get; set; }
 
         [Required(ErrorMessage = "La Descripción es Obligatoria")]
         public required string Descripcion { get; set; }
@@ -18,9 +14,7 @@ namespace WebApplication1.Models
         public int Precio { get; set; }
 
         [Required(ErrorMessage = "La Cantidad es Obligatoria")]
-        public required string Cantidad { get; set; }
+        public int Cantidad { get; set; }
 
-        [Required(ErrorMessage = "La Caducidad es Obligatoria")]
-        public DateOnly Caducidad { get; set; }
     }
 }

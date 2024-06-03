@@ -1,0 +1,57 @@
+﻿@model IEnumerable<WebApplication1.Models.Venta>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Generar Ticket</title>
+    <style>
+        /* Estilos CSS para el ticket */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .ticket {
+            width: 200px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .titulo {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .producto {
+            margin-bottom: 5px;
+        }
+
+        .nombre {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <div class="titulo">Ticket de Venta</div>
+        @foreach (var venta in Model)
+        {
+            <div class="producto">
+                <div class="nombre">NoVenta: @venta.NoVenta</div>
+                <div>NDC: @venta.NDC</div>
+                <div>Descripcion: @venta.Descripcion</div>
+                <div>Cantidad: @venta.Cantidad</div>
+                <div>Precio: @venta.Precio</div>
+                <!-- Agrega más detalles de la venta si es necesario -->
+            </div>
+        }
+        <div class="total">Total: $@Model.Sum(v => v.Precio)</div>
+    </div>
+</body>
+</html>

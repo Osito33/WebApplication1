@@ -9,23 +9,14 @@
         </div>
     </div>
 
-    
     <div class="row">
-        <div class="col-2">
-            <div class="float-lg-end">
-                <a asp-controller="Home" asp-action="Create" class="btn btn-success">
-                    <i class="fa-solid fa-plus"></i> Agregar
-                </a>
-            </div>
+        <div class="float-lg-end">
+            <a asp-controller="Home" asp-action="Create" class="btn btn-success">
+                <i class="fa-solid fa-plus"></i> Agregar
+            </a>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <!-- Contenedor para la notificación -->
-            <div id="notification-container"></div>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -67,12 +58,25 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="float-lg-end">
+            <a asp-controller="Home" asp-action="generarReporte" class="btn btn-success">
+                <i class="fa-solid fa-file-pdf"></i> PDF
+            </a>
+        </div>
+    </div>
 </div>
-<div class="float-lg-end">
-    <a asp-controller="Home" asp-action="generarReporte" class="btn btn-success">
-        <i class="fa-solid fa-file-pdf"></i> PDF
-    </a>
+
+<div id="successMessageContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="successMessageToast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Mensaje de Éxito</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="successMessageText"></div>
+    </div>
 </div>
+
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -81,13 +85,13 @@
 
     <script>
         $(document).ready(function () {
-            // Inicializar DataTables
-            $('#tablaProducto').DataTable();
-
-            // Mostrar la notificación si existe un mensaje en ViewBag
-            var mensajeBienvenida = '@ViewBag.MensajeBienvenida';
-            if (mensajeBienvenida) {
-                $.notify(mensajeBienvenida, "success");
+            var successMessage = '@Html.Raw(TempData["SuccessMessage"])';
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: successMessage
+                });
             }
         });
     </script>

@@ -1,33 +1,33 @@
-﻿@model WebApplication1.Models.Producto
+﻿@model WebApplication1.Models.Venta
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h4 class="alert alert-success">Agregar Producto</h4>
+<h4 class="alert alert-success">Agregar Producto a la venta</h4>
 <hr />
 <div class="row">
     <div class="col-md-4"></div>
     <div class="col-md-4">
-        <form asp-action="AddPerson" asp-controller="Home" enctype="multipart/form-data">
+        <form asp-action="AddVenta" asp-controller="Ventas" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <i class="fa-solid fa-pen"></i>
+                <label asp-for="NoVenta" class="control-label"></label>
+                <input asp-for="NoVenta" class="form-control" value="@ViewBag.NoVenta" readonly />
+                <span asp-validation-for="NoVenta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <i class="fa-solid fa-dollar-sign"></i>
                 <label asp-for="NDC" class="control-label"></label>
                 <input asp-for="NDC" class="form-control" />
                 <span asp-validation-for="NDC" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <i class="fa-solid fa-pen"></i>
+                <i class="fa-solid fa-dollar-sign"></i>
                 <label asp-for="Descripcion" class="control-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <i class="fa-solid fa-dollar-sign"></i>
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <i class="fa-solid fa-cubes"></i>
@@ -42,6 +42,12 @@
                 <span asp-validation-for="Caducidad" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <i class="fa-solid fa-dollar-sign"></i>
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Guardar
                 </button>
@@ -53,10 +59,33 @@
     </div>
 </div>
 
+<div id="errorMessageContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="errorMessageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Mensaje de Error</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="errorMessageText"></div>
+    </div>
+</div>
 
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            var errorMessage = '@Html.Raw(TempData["ErrorMessage"])';
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
+            }
+        });
+
+    </script>
 }
+
