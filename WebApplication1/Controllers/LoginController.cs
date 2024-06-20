@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 public class LoginController : Controller
 {
@@ -16,12 +17,14 @@ public class LoginController : Controller
         _context = context;
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Index(Usuario user)
     {
         var usuario = _context.Usuarios.FirstOrDefault(u =>
@@ -53,4 +56,10 @@ public class LoginController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Login");
+    }
+
 }

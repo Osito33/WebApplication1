@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication1.Models.Producto>
+﻿@model IEnumerable<WebApplication1.Models.Inventario>
 
 <div class="container">
     <div class="row">
@@ -18,36 +18,38 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 my-3">
             <div class="card">
                 <div class="card-header text-center">
-                    Administración de Medicamentos
+                    <strong>Administración de Medicamentos</strong>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="tablaProducto" class="table table-striped" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(p => p.Id)</th>
                                     <th>@Html.DisplayNameFor(p => p.Descripcion)</th>
-                                    <th>@Html.DisplayNameFor(p => p.Precio)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Contenido)</th>
+                                    <th>@Html.DisplayNameFor(p => p.Precio)</th>                              
                                     <th>@Html.DisplayNameFor(p => p.Cantidad)</th>
-                                    <th>@Html.DisplayNameFor(p => p.Caducidad)</th>
-                                    <th>Acciones</th>
+                                    <th>Inventario</th>
+                                    <th>Reporte</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var elemento in Model)
                                 {
-                                    <tr>
-                                        <td>@Html.DisplayFor(p => elemento.Id)</td>
+                                    var rowClass = elemento.Cantidad < 5 ? "table-danger" : "";
+                                    <tr class="@rowClass">
                                         <td>@Html.DisplayFor(p => elemento.Descripcion)</td>
+                                        <td>@Html.DisplayFor(p => elemento.Contenido)</td>
                                         <td>@Html.DisplayFor(p => elemento.Precio)</td>
                                         <td>@Html.DisplayFor(p => elemento.Cantidad)</td>
-                                        <td>@Html.DisplayFor(p => elemento.Caducidad)</td>
                                         <td>
-                                            <a asp-controller="Home" asp-action="Edit" asp-route-id="@elemento.Id" class="btn btn-primary">Editar</a>
-                                            <a asp-controller="Home" asp-action="Delete" asp-route-id="@elemento.Id" class="btn btn-danger">Eliminar</a>
+                                            <button type="button" class="btn btn-primary" onclick="mostrarProductos('@elemento.Descripcion', '@elemento.Contenido', @elemento.Precio)">Mostrar Todos</button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" onclick="generarReporte('@elemento.Descripcion', '@elemento.Contenido', @elemento.Precio)">Pdf</button>
                                         </td>
                                     </tr>
                                 }
@@ -60,12 +62,15 @@
     </div>
     <div class="row">
         <div class="float-lg-end">
-            <a asp-controller="Home" asp-action="generarReporte" class="btn btn-success">
+            <a href="@Url.Action("generarReporte", "Home")" target="_blank" class="btn btn-success">
                 <i class="fa-solid fa-file-pdf"></i> PDF
             </a>
         </div>
     </div>
+
 </div>
+
+<div id="modalContainer"></div>
 
 <div id="successMessageContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
     <div id="successMessageToast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
@@ -76,12 +81,22 @@
         <div class="toast-body" id="successMessageText"></div>
     </div>
 </div>
-
+<div id="errorMessageContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+    <div id="errorMessageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Mensaje de Error</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="errorMessageText"></div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -94,5 +109,34 @@
                 });
             }
         });
+
+        $(document).ready(function () {
+            var errorMessage = '@Html.Raw(TempData["ErrorMessage"])';
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage
+                });
+            }
+        });
+
+        function mostrarProductos(descripcion, contenido, precio) {
+            $.get('@Url.Action("MostrarProductos", "Home")', { descripcion: descripcion, contenido: contenido, precio: precio }, function (data) {
+                $('#modalContainer').html(data);
+                $('#productosModal').modal('show');
+            });
+        }
+
+        function generarReporte(descripcion, contenido, precio) {
+            var url = '@Url.Action("ProductosReporte", "Home")';
+            var form = $('<form action="' + url + '" method="post" target="_blank">' +
+                '<input type="hidden" name="descripcion" value="' + descripcion + '" />' +
+                '<input type="hidden" name="contenido" value="' + contenido + '" />' +
+                '<input type="hidden" name="precio" value="' + precio + '" />' +
+                '</form>');
+            $('body').append(form);
+            form.submit();
+        }
     </script>
 }

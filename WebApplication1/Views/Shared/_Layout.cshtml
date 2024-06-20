@@ -38,6 +38,7 @@
                 .dropdown-menu a:hover {
                     background-color: #f1f1f1;
                 }
+
     </style>
 </head>
 <body>
@@ -68,15 +69,25 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Ventas" asp-action="Index">Ventas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Compras" asp-action="Index">Compras</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- Aquí se agrega la imagen -->
                 <div>
                     <img src="~/img/Logo2.png" alt="Descripción de la imagen" class="img-fluid" style="max-height: 50px;" id="menuToggle">
                     <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="#" id="cerrarSesion">Cerrar sesión</a>
+                        <a href="@Url.Action("Logout", "Login")">Cerrar sesión</a>
                     </div>
                 </div>
+
+                @* <div>
+                    <img src="~/img/Logo2.png" alt="Descripción de la imagen" class="img-fluid" style="max-height: 50px;" id="menuToggle">
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" id="cerrarSesion">Cerrar sesión</a>                  
+                    </div>
+                </div> *@
             </div>
         </nav>
     </header>
@@ -94,6 +105,8 @@
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script defer src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -106,7 +119,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const menuToggle = document.getElementById('menuToggle');
             const dropdownMenu = document.getElementById('dropdownMenu');
-            const cerrarSesion = document.getElementById('cerrarSesion');
+            const cerrarSesion = document.querySelector('#dropdownMenu a');
 
             menuToggle.addEventListener('click', function () {
                 dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
@@ -114,7 +127,7 @@
 
             cerrarSesion.addEventListener('click', function (event) {
                 event.preventDefault();
-                window.location.href = '@Url.Action("Index", "Login")';  // Cambia a la URL de tu página de login
+                window.location.href = cerrarSesion.getAttribute('href');
             });
 
             // Ocultar el menú si se hace clic fuera de él
@@ -126,6 +139,7 @@
                 }
             });
         });
+            
     </script>
 </body>
 </html>

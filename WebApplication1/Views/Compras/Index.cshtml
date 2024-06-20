@@ -1,0 +1,97 @@
+﻿@model WebApplication1.ViewModels.CompraViewModel
+
+@{
+    ViewData["Title"] = "Compras";
+}
+
+<h2>Compras</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <h5 class="alert alert-primary text-center">
+            Stock con pocas unidades disponibles
+        </h5>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Contenido</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Inventario)
+        {
+            <tr>
+                <td>@item.Descripcion</td>
+                <td>@item.Contenido</td>
+                <td>@item.Precio</td>
+                <td>@item.Cantidad</td>
+                <td>
+                    <form asp-action="AgregarAlPedido" method="post">
+                        <input type="hidden" asp-for="NuevoPedido.Descripcion" value="@item.Descripcion" />
+                        <input type="hidden" asp-for="NuevoPedido.Contenido" value="@item.Contenido" />
+                        <input type="hidden" asp-for="NuevoPedido.Precio" value="@item.Precio" />
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad</label>
+                            <input type="number" asp-for="NuevoPedido.Cantidad" class="form-control" min="1" value="1" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Agregar al Pedido</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-12">
+        <h3 class="alert alert-primary text-center">
+            Pedido Actual
+        </h3>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Contenido</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Pedido)
+        {
+            <tr>
+                <td>@item.Descripcion</td>
+                <td>@item.Contenido</td>
+                <td>@item.Precio</td>
+                <td>@item.Cantidad</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("MostrarReporte", "Compras")" target="_blank" class="btn btn-success">Realizar Pedido</a>
+

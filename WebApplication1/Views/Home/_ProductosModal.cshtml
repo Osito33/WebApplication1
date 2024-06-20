@@ -1,0 +1,66 @@
+﻿@model List<WebApplication1.Models.Producto>
+
+<div class="modal fade" id="productosModal" tabindex="-1" role="dialog" aria-labelledby="productosModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="productosModalLabel" style="margin: 0 auto; text-align: center; width: 100%;">Productos Encontrados</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>NDC</th>
+                            <th>Descripción</th>
+                            <th>Contenido</th>
+                            <th>Precio</th>
+                            <th>Caducidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in Model)
+                        {
+                            // Calcula la fecha de caducidad próxima (30 días a partir de la fecha actual)
+                            var fechaActual = DateOnly.FromDateTime(DateTime.Today);
+                            var fechaCaducidadProxima = fechaActual.AddDays(30);
+
+                            // Verifica si la fecha de caducidad del producto está dentro de los próximos 30 días
+                            var estaProximaCaducidad = producto.Caducidad <= fechaCaducidadProxima;
+
+                            // Aplica el estilo rojo si la fecha de caducidad está dentro de los próximos 30 días
+                            var claseFila = estaProximaCaducidad ? "table-danger" : "";
+
+                            <tr class="@claseFila">
+                                <td>@producto.NDC</td>
+                                <td>@producto.Descripcion</td>
+                                <td>@producto.Contenido</td>
+                                <td>@producto.Precio</td>
+                                <td>@producto.Caducidad.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@producto.Id" class="btn btn-warning">Editar</a>
+                                </td>
+                            </tr>
+                        }
+                        @* @foreach (var producto in Model)
+                        {
+                            <tr>
+                                <td>@producto.NDC</td>
+                                <td>@producto.Descripcion</td>
+                                <td>@producto.Contenido</td>
+                                <td>@producto.Precio</td>
+                                <td>@producto.Caducidad.ToString("yyyy-MM-dd")</td>
+                            </tr>
+                        } *@
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,7 +13,8 @@ namespace WebApplication1.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<Inventario> Inventarios { get; set; }
-
-
+        public DbSet<Contador> Contadors { get; set; }
+        public DbSet<Pedido>Pedidos { get; set; }
+        public DbSet<Provedor> Provedores { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "La Descripción es Obligatoria")]
         public required string Descripcion { get; set; }
          
-        [Required(ErrorMessage = "La Cantidad es Obligatoria")]
-        public required string Cantidad { get; set; }
+        [Required(ErrorMessage = "El contenido es Obligatorio")]
+        public required string Contenido { get; set; }
 
         [Required(ErrorMessage = "La Caducidad es Obligatoria")]
         public DateOnly Caducidad { get; set; }
@@ -26,5 +26,8 @@ namespace WebApplication1.Models
         public int Precio { get; set; }
 
         public int Total { get; set; }
+
+        public DateTime FechaVenta { get; set; }
+
     }
 }

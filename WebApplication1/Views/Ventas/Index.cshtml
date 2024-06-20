@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication1.Models.Venta>
+﻿@model WebApplication1.Models.VentasViewModel
 
 <div class="container">
     <div class="row">
@@ -9,21 +9,24 @@
         </div>
     </div>
 
-
     <div class="row">
-
         <div class="float-lg-end">
-            <a asp-controller="Ventas" asp-action="Create" class="btn btn-success">
-                <i class="fa-solid fa-plus"></i> Agregar Producto
-            </a>
+            <form asp-controller="Ventas" asp-action="Buscar" method="post">
+                <div class="col-2">
+                    <label for="buscarNDC"><strong>NDC:</strong></label>
+                    <input type="text" class="form-control" id="buscarNDC" name="NDC" required maxlength="15">
+                </div>
+                <button type="submit" class="btn btn-primary my-1">
+                    <i class="fa-solid fa-plus"></i> Agregar Producto
+                </button>
+            </form>
         </div>
     </div>
 
-
-    @if (Model.Any())
+    @if (Model.Ventas.Any())
     {
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 my-2">
                 <div class="table-responsive">
                     <table id="ventasTable" class="table table-striped">
                         <thead>
@@ -31,25 +34,21 @@
                                 <th>NoVenta</th>
                                 <th>NDC</th>
                                 <th>Descripción</th>
-                                <th>Cantidad</th>
+                                <th>Contenido</th>
                                 <th>Precio</th>
+                                <th>Fecha de Venta</th>
                             </tr>
                         </thead>
-
-
                         <tbody id="ventasBody">
-                            @{
-                                var numeroVenta = Model.FirstOrDefault()?.NoVenta; // Obtener el primer número de venta para filtrar
-                                var productosVenta = Model.Where(p => p.NoVenta == numeroVenta);
-                            }
-                            @foreach (var venta in productosVenta)
+                            @foreach (var venta in Model.Ventas)
                             {
                                 <tr>
                                     <td>@Html.DisplayFor(p => venta.NoVenta)</td>
                                     <td>@Html.DisplayFor(p => venta.NDC)</td>
                                     <td>@Html.DisplayFor(p => venta.Descripcion)</td>
-                                    <td>@Html.DisplayFor(p => venta.Cantidad)</td>
+                                    <td>@Html.DisplayFor(p => venta.Contenido)</td>
                                     <td>@Html.DisplayFor(p => venta.Precio)</td>
+                                    <td>@Html.DisplayFor(p => venta.FechaVenta)</td>
                                 </tr>
                             }
                         </tbody>
@@ -57,22 +56,27 @@
                 </div>
             </div>
         </div>
+        
+        
     }
     else
     {
         <p>No hay datos para mostrar.</p>
     }
-    
+
     <div class="row">
         <div class="col-12">
-            <h4>Total de la Venta: $<span id="totalVenta"></span></h4>
+            <h4>Total de la Venta: $<span id="totalVenta">@Model.TotalVentas</span></h4>
         </div>
     </div>
 
     <div class="row">
-        <div class="float-lg-end">
-            <a asp-controller="Ventas" asp-action="realizarVenta" class="btn btn-success">
-                <i class="fa-solid fa-plus"></i> Realizar Venta
+        <div class="col-12 d-flex justify-content-between">
+            <a asp-controller="Ventas" asp-action="realizarVenta" class="btn btn-success me-2">
+                <i class="fa-solid fa-cash-register"></i> Realizar Venta
+            </a>
+            <a asp-controller="Ventas" asp-action="cancelarVenta" class="btn btn-danger">
+                <i class="fa-solid fa-ban"></i> Cancelar Venta
             </a>
         </div>
     </div>
@@ -98,32 +102,10 @@
     </div>
 </div>
 
+
 @section Scripts {
+
     <script>
-        $(document).ready(function () {
-            calcularTotalVenta();
-
-            function calcularTotalVenta() {
-                var totalVenta = 0;
-                $('#ventasBody tr').each(function () {
-                    // Obtener el texto del td correspondiente al precio
-                    var precioStr = $(this).find('td:eq(6)').text().trim();
-                    // Convertir el texto a un número entero
-                    var precio = parseInt(precioStr);
-                    // Verificar si el valor es un número válido
-                    if (!isNaN(precio)) {
-                        totalVenta += precio;
-                    } else {
-                        console.log('Valor no válido:', precioStr);
-                    }
-                });
-                // Mostrar el total de la venta
-                $('#totalVenta').text(totalVenta.toFixed(2));
-            }
-        });
-
-
-
         $(document).ready(function () {
             var errorMessage = '@Html.Raw(TempData["ErrorMessage"])';
             if (errorMessage) {

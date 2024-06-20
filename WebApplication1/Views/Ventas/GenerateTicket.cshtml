@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<WebApplication1.Models.Venta>
 @{
     Layout = null;
+    var fechaHoraActual = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 }
 
 <!DOCTYPE html>
@@ -35,10 +36,35 @@
         .nombre {
             font-weight: bold;
         }
+
+        .cabecera {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+            .cabecera img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .cabecera .nombre-farmacia {
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .cabecera .fecha-hora {
+                font-size: 12px;
+                margin-top: 5px;
+            }
     </style>
 </head>
 <body>
     <div class="ticket">
+        <div class="cabecera">
+            <img src="~/img/Logo2.png" alt="Logo de la Farmacia" />
+            <div class="nombre-farmacia">Vital Pharma</div>
+            <div class="fecha-hora">@fechaHoraActual</div>
+        </div>
         <div class="titulo">Ticket de Venta</div>
         @foreach (var venta in Model)
         {
@@ -46,7 +72,7 @@
                 <div class="nombre">NoVenta: @venta.NoVenta</div>
                 <div>NDC: @venta.NDC</div>
                 <div>Descripcion: @venta.Descripcion</div>
-                <div>Cantidad: @venta.Cantidad</div>
+                <div>Contenido: @venta.Contenido</div>
                 <div>Precio: @venta.Precio</div>
                 <!-- Agrega más detalles de la venta si es necesario -->
             </div>

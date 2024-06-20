@@ -10,6 +10,9 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "La Descripción es Obligatoria")]
         public required string Descripcion { get; set; }
 
+        [Required(ErrorMessage = "El Contenido es Obligatorio")]
+        public required string Contenido { get; set; }
+
         [Required(ErrorMessage = "El Precio es Obligatorio")]
         public int Precio { get; set; }
 
